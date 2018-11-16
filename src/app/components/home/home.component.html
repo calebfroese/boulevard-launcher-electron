@@ -1,9 +1,10 @@
 <div class="w-100 d-flex flex-column">
   <h1 class="title text-center">Boulevard</h1>
 
-  <p class="flex-grow-1">Release notes.</p>
+  <div class="release-notes flex-grow-1 p-5"
+    [innerHTML]="releaseNotes$ | async"></div>
 
-  <div class="update-and-play p-3 d-flex align-items-center flex-row">
+  <div class="update-and-play my-5 p-2 d-flex align-items-center flex-row">
     <!-- Progress bar -->
     <div class="flex-grow-1 p-4">
       <div class="progress">

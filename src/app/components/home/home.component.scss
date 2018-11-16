@@ -4,6 +4,19 @@
   }
 
   .update-and-play {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .release-notes {
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #000000;
+    }
   }
 }
