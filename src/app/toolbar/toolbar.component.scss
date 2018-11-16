@@ -1,10 +1,8 @@
 :host() {
+  background: #141414;
+
   // Make the toolbar draggable
   // https://www.christianengvall.se/electron-frameless-window/
   -ms-overflow-style: scrollbar;
   -webkit-app-region: drag;
-
-  .root-toolbar {
-      background: #141414;
-  }
 }
