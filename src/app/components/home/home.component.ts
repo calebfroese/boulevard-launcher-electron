@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 
-import { UpdateService } from '../../providers/update.service';
+import { AppConfig } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +8,6 @@ import { UpdateService } from '../../providers/update.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
-  ngOnInit() {
-  }
+  launcherVersion = AppConfig.launcherVersion;
+  ngOnInit() {}
 }

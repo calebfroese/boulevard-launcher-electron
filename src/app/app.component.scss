@@ -12,3 +12,8 @@
     overflow: auto;
   }
 }
+:host /deep/ router-outlet + * {
+  display: flex;
+  flex: 1;
+  height: 720px;
+}
