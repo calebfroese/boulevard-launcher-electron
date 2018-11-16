@@ -1,19 +1,7 @@
 {
   "name": "boulevard-launcher-electron",
-  "version": "5.0.0",
-  "description": "Angular 7 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/boulevard-launcher-electron",
-  "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
-  },
-  "keywords": [
-    "angular",
-    "angular 7",
-    "electron",
-    "typescript",
-    "sass"
-  ],
+  "version": "0.0.0",
+  "description": "Boulevard Launcher",
   "main": "main.js",
   "private": true,
   "scripts": {
