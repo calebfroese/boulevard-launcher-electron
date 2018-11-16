@@ -13,6 +13,7 @@ import { UpdateLauncherComponent } from './components/update-launcher/update-lau
 import { WebviewDirective } from './directives/webview.directive';
 import { ElectronService } from './providers/electron.service';
 import { UpdateService } from './providers/update.service';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { UpdateService } from './providers/update.service';
     HomeComponent,
     UpdateLauncherComponent,
     WebviewDirective,
+    ToolbarComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [ElectronService, UpdateService],
