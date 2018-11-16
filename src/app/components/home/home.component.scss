@@ -19,4 +19,11 @@
       background-color: #000000;
     }
   }
+
+  .information {
+    p {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }

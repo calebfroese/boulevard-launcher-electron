@@ -1,8 +1,23 @@
 <div class="w-100 d-flex flex-column">
   <h1 class="title text-center">Boulevard</h1>
 
-  <div class="release-notes flex-grow-1 p-5"
-    [innerHTML]="releaseNotes$ | async"></div>
+  <div class="flex-grow-1 row row-column">
+    <!-- Release notes -->
+    <div class="release-notes col-8 p-5"
+      [innerHTML]="releaseNotes$ | async"></div>
+    <!-- Information -->
+    <div class="information col-4 p-5">
+      <h4>Information</h4>
+      <p>
+        <b>Launcher</b>
+        <span>{{ launcherVersion }}</span>
+      </p>
+      <p>
+        <b>Latest Game</b>
+        <span>{{ latestGameVersion$ | async }}</span>
+      </p>
+    </div>
+  </div>
 
   <div class="update-and-play my-5 p-2 d-flex align-items-center flex-row">
     <!-- Progress bar -->

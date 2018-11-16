@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AppConfig } from '../../../environments/environment';
+import { UpdateService } from '../../providers/update.service';
 
 @Component({
   selector: 'app-home',
@@ -11,14 +12,14 @@ import { AppConfig } from '../../../environments/environment';
 })
 export class HomeComponent implements OnInit {
   releaseNotes$: Observable<string>;
+  latestGameVersion$: Observable<string>;
 
   launcherVersion = AppConfig.launcherVersion;
 
-  constructor(public http: HttpClient) {}
+  constructor(public updateService: UpdateService) {}
 
   ngOnInit() {
-    this.releaseNotes$ = this.http.get(AppConfig.releaseNotesUrl, {
-      responseType: 'text',
-    });
+    this.releaseNotes$ = this.updateService.getReleaseNotes();
+    this.latestGameVersion$ = this.updateService.getLatestGameVersion();
   }
 }

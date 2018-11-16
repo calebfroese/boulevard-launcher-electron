@@ -15,10 +15,20 @@ export class UpdateService {
     public http: HttpClient
   ) {}
 
+  getReleaseNotes() {
+    return this.http.get(AppConfig.releaseNotesUrl, {
+      responseType: 'text',
+    });
+  }
+
   getLauncherUpdateRequired() {
     return this.getUpdateData().pipe(
       map(data => data.launcher.latestVersion > AppConfig.launcherVersion)
     );
+  }
+
+  getLatestGameVersion() {
+    return this.getUpdateData().pipe(map(data => data.game.latestVersion));
   }
 
   private getUpdateData() {
