@@ -9,3 +9,13 @@ interface Window {
   process: any;
   require: any;
 }
+
+interface UpdateFile {
+  game: {
+    latestVersion: string;
+  };
+  launcher: {
+    latestVersion: string;
+    manupVersion: string;
+  };
+}

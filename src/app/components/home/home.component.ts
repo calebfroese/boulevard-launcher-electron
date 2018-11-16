@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { UpdateService } from '../../providers/update.service';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 }
