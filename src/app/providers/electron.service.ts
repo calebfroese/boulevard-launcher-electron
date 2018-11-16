@@ -8,7 +8,6 @@ import * as fs from 'fs';
 
 @Injectable()
 export class ElectronService {
-
   ipcRenderer: typeof ipcRenderer;
   webFrame: typeof webFrame;
   remote: typeof remote;
@@ -29,6 +28,5 @@ export class ElectronService {
 
   isElectron = () => {
     return window && window.process && window.process.type;
-  }
-
+  };
 }

@@ -1,0 +1,5 @@
+package.json
+package.lock.json
+tools/
+dist/
+angular.json

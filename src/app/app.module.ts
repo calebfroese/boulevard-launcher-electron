@@ -11,18 +11,9 @@ import { WebviewDirective } from './directives/webview.directive';
 import { ElectronService } from './providers/electron.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    WebviewDirective
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-  ],
+  declarations: [AppComponent, HomeComponent, WebviewDirective],
+  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [ElectronService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
