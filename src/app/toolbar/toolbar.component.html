@@ -1,11 +1,13 @@
 <div class="w-100 h-16 px-4 py-2 d-flex justify-content-between">
   <div></div>
   <div>
-    <button class="btn btn-link p-0">
+    <button (click)="onMinimize()"
+      class="btn btn-link p-0">
       <img class="m-1"
         src="/assets/svg/baseline-minimize-24px.svg">
     </button>
-    <button class="btn btn-link p-0">
+    <button (click)="onClose()"
+      class="btn btn-link p-0">
       <img class="m-1"
         src="/assets/svg/baseline-close-24px.svg">
     </button>

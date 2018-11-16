@@ -32,4 +32,12 @@ export class AppComponent implements OnInit {
       if (updateRequired) this.router.navigate(['/', 'update-launcher']);
     });
   }
+
+  minimize() {
+    this.electronService.remote.BrowserWindow.getFocusedWindow().minimize();
+  }
+
+  close() {
+    this.electronService.remote.BrowserWindow.getFocusedWindow().close();
+  }
 }
