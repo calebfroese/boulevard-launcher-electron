@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
 
   launcherVersion = AppConfig.launcherVersion;
 
-  constructor(public updateService: UpdateService, public router: Router) {}
+  constructor(public updateService: UpdateService, public router: Router) { }
 
   ngOnInit() {
     this.releaseNotes$ = this.updateService.getReleaseNotes();
@@ -75,7 +75,11 @@ export class HomeComponent implements OnInit {
     this.latestGameVersion$ = this.updateService.getLatestGameVersion();
     this.progressPercent$ = this.updateService
       .getProgress()
-      .pipe(map(progress => Math.floor(progress) + '%'));
+      .pipe(map(progress => {
+        progress = progress || 0;
+        console.log(progress, progress.toFixed(2), progress.toFixed(2) + '%');
+        return progress.toFixed(2) + '%'
+      }));
     this.updateService.getLauncherUpdateRequired().subscribe(updateRequired => {
       console.log('Update required?', updateRequired);
       if (updateRequired) this.router.navigate(['/', 'update-launcher']);
