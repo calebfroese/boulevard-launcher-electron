@@ -3,10 +3,11 @@
 
   <div class="flex-grow-1 row row-column">
     <!-- Release notes -->
-    <div *ngIf="releaseNotes$ | async as notes"
-      [@fadeUp]
-      class="release-notes col-7 p-5"
-      [innerHTML]="notes"></div>
+    <div class="release-notes col-7 p-5">
+      <div *ngIf="releaseNotes$ | async as notes"
+        [@fadeUp]
+        [innerHTML]="notes"></div>
+    </div>
     <!-- Information -->
     <div [@fadeUp]
       class="information col-5 p-5 d-flex flex-column">

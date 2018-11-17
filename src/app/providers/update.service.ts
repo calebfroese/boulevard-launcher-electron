@@ -51,7 +51,8 @@ export class UpdateService {
   }
 
   getReleaseNotes() {
-    return this.http.get(AppConfig.releaseNotesUrl, {
+    const cachebuster = '?request' + Date.now();
+    return this.http.get(AppConfig.releaseNotesUrl + cachebuster, {
       responseType: 'text',
     });
   }
