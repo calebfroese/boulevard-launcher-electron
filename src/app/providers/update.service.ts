@@ -8,9 +8,10 @@ import { ElectronService } from './electron.service';
 
 enum Status {
   LOADING = 'LOADING',
-  UPDATE_REQUESTED = 'UPDATE_REQUESTED',
-  UPDATE_REQUIRED = 'UPDATE_REQUIRED',
-  UPDATE_IN_PROGRESS = 'UPDATE_IN_PROGRESS',
+  DOWNLOAD_REQUESTED = 'DOWNLOAD_REQUESTED',
+  DOWNLOAD_REQUIRED = 'DOWNLOAD_REQUIRED',
+  DOWNLOAD_IN_PROGRESS = 'DOWNLOAD_IN_PROGRESS',
+  EXTRACT_IN_PROGRESS = 'EXTRACT_IN_PROGRESS',
   PLAYABLE = 'PLAYABLE',
 }
 
@@ -56,7 +57,7 @@ export class UpdateService {
       map((data: UpdateFile) => (this.data = data)),
       tap(data => {
         if (data.game.latestVersion > '-')
-          this.status$.next(Status.UPDATE_REQUIRED);
+          this.status$.next(Status.DOWNLOAD_REQUIRED);
         else this.status$.next(Status.PLAYABLE);
       })
     );
@@ -70,10 +71,10 @@ export class UpdateService {
 
   private downloadUpdate(version: string) {
     this.electronService.ipcRenderer.send('download-game', version);
-    this.status$.next(Status.UPDATE_REQUESTED);
+    this.status$.next(Status.DOWNLOAD_REQUESTED);
     this.electronService.ipcRenderer.on('download-game.started', () =>
       this.zone.run(() => {
-        this.status$.next(Status.UPDATE_IN_PROGRESS);
+        this.status$.next(Status.DOWNLOAD_IN_PROGRESS);
       })
     );
     this.electronService.ipcRenderer.on(
@@ -82,6 +83,11 @@ export class UpdateService {
         this.zone.run(() => {
           this.progress$.next(progress * 100);
         })
+    );
+    this.electronService.ipcRenderer.on('download-game.extracting', event =>
+      this.zone.run(() => {
+        this.status$.next(Status.EXTRACT_IN_PROGRESS);
+      })
     );
     this.electronService.ipcRenderer.on('download-game.complete', event =>
       this.zone.run(() => {

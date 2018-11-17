@@ -8,7 +8,8 @@
       class="release-notes col-8 p-5"
       [innerHTML]="notes"></div>
     <!-- Information -->
-    <div [@fadeUp] class="information col-4 p-5">
+    <div [@fadeUp]
+      class="information col-4 p-5">
       <h4>Information</h4>
       <p>
         <b>Launcher Version</b>
@@ -36,20 +37,25 @@
     </div>
     <div class="update-button mx-auto text-center">
       <ng-container [ngSwitch]="status$ | async">
-        <div *ngSwitchCase="'UPDATE_REQUIRED'">
+        <div *ngSwitchCase="'DOWNLOAD_REQUIRED'">
           <button [@popIn]
             (click)="update()"
             class="py-3 px-5 btn btn-link">UPDATE</button>
         </div>
-        <div *ngSwitchCase="'UPDATE_REQUESTED'">
+        <div *ngSwitchCase="'DOWNLOAD_REQUESTED'">
           <button [@popIn]
             disabled
             class="py-3 px-5 btn btn-link">Starting download...</button>
         </div>
-        <div *ngSwitchCase="'UPDATE_IN_PROGRESS'">
+        <div *ngSwitchCase="'DOWNLOAD_IN_PROGRESS'">
           <button [@popIn]
             disabled
             class="py-3 px-5 btn btn-link">{{ progressPercent$ | async }}</button>
+        </div>
+        <div *ngSwitchCase="'EXTRACT_IN_PROGRESS'">
+          <button [@popIn]
+            disabled
+            class="py-3 px-5 btn btn-link">Extracting... {{ progressPercent$ | async }}</button>
         </div>
         <div *ngSwitchCase="'PLAYABLE'">
           <button [@popIn]

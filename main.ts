@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as DecompressZip from 'decompress-zip';
 
 const { download } = require('electron-dl');
 
@@ -49,18 +50,48 @@ function createWindow() {
 
   ipcMain.on('download-game', async (event, version) => {
     console.log(version);
+    const filename = `${version}.zip`;
     const uri = [
       'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
-      `${version}.zip`,
+      filename,
     ].join('/');
     console.log('Downloading', uri);
+    const directory = path.join(app.getPath('temp'), 'Boulevard');
+    console.log('Saving to', directory);
     const downloadItem = await download(win, uri, {
-      directory: app.getPath('temp') + '/spaghetti.zip',
+      directory: directory,
       onStarted: data => event.sender.send('download-game.started', data),
       onProgress: data => event.sender.send('download-game.progress', data),
     });
-    event.sender.send('download-game.complete');
-    console.log('downloadItem', downloadItem);
+    event.sender.send('download-game.extracting');
+
+    // Unzip
+    const localFilePath = path.join(directory, filename);
+    const unzipper = new DecompressZip(localFilePath);
+    unzipper.on('error', function(err) {
+      console.log('Caught an error');
+      console.log(err);
+    });
+
+    unzipper.on('extract', function(log) {
+      console.log('Finished extracting');
+      console.log(log);
+      event.sender.send('download-game.progress', 1);
+      event.sender.send('download-game.complete');
+    });
+
+    unzipper.on('progress', function(fileIndex, fileCount) {
+      event.sender.send('download-game.progress', fileIndex / fileCount);
+    });
+
+    const extractPath = path.join(app.getPath('appData'), 'Boulevard', version);
+    console.log(extractPath);
+    unzipper.extract({
+      path: extractPath,
+      filter: function(file) {
+        return file.type !== 'SymbolicLink';
+      },
+    });
   });
 }
 
