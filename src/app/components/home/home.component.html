@@ -45,7 +45,7 @@
         <div *ngSwitchCase="'DOWNLOAD_REQUIRED'">
           <button [@popIn]
             (click)="update()"
-            class="py-3 px-5 btn btn-link">UPDATE</button>
+            class="py-3 px-5 btn btn-link">UPDATE to v{{ latestGameVersion$ | async }}</button>
         </div>
         <div *ngSwitchCase="'DOWNLOAD_REQUESTED'">
           <button [@popIn]

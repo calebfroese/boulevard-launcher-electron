@@ -68,8 +68,10 @@ export class UpdateService {
 
   private getUpdateData() {
     if (this.data) return of(this.data);
-    return this.http.get(AppConfig.updateFileUrl).pipe(
+    const cachebuster = '?request' + Date.now();
+    return this.http.get(AppConfig.updateFileUrl + cachebuster).pipe(
       tap((data: UpdateFile) => {
+        this.appendLog(JSON.stringify(data));
         this.data = data;
       }),
       switchMap(data =>
