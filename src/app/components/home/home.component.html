@@ -17,10 +17,6 @@
           <span>{{ launcherVersion }}</span>
         </p>
         <p>
-          <b>Installed Game Version</b>
-          <span>{{ installedGameVersion$ | async }}</span>
-        </p>
-        <p>
           <b>Latest Game Version</b>
           <span>{{ latestGameVersion$ | async }}</span>
         </p>
@@ -79,7 +75,7 @@
         <div *ngSwitchCase="'PLAYABLE'">
           <button [@popIn]
             (click)="play()"
-            class="py-3 px-5 btn btn-link">PLAY</button>
+            class="py-3 px-5 btn btn-link">PLAY v{{ latestGameVersion$ | async}}</button>
         </div>
         <div *ngSwitchDefault>
           <button [@popIn]

@@ -2,7 +2,9 @@ import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as rimraf from 'rimraf';
+import * as fs from 'fs';
 import * as DecompressZip from 'decompress-zip';
+import * as child_process from 'child_process';
 
 const { download } = require('electron-dl');
 
@@ -13,7 +15,11 @@ serve = args.some(val => val === '--serve');
 // Temporary location where game artifacts are downloaded to
 const tempDirectory = path.join(app.getPath('temp'), 'Boulevard', 'artifacts');
 // Where the extracted game is stored
-const gameDirectory = path.join(app.getPath('appData'), 'Boulevard');
+const installationDirectory = path.join(
+  app.getPath('appData'),
+  'Boulevard',
+  'versions'
+);
 
 function createWindow() {
   const electronScreen = screen;
@@ -54,6 +60,45 @@ function createWindow() {
     win = null;
   });
 
+  ipcMain.on('installed-versions', async event => {
+    event.sender.send('download-game.log', 'Discovering installed versions');
+    const installedVersions = await getInstalledVersions();
+    event.sender.send(
+      'download-game.log',
+      `Found ${installedVersions.length} versions installed`
+    );
+    event.sender.send('installed-versions.get', installedVersions);
+  });
+
+  ipcMain.on('launch-game', async (event, version) => {
+    event.sender.send(
+      'download-game.log',
+      'Launching game executable on' + process.platform
+    );
+    let filename = '';
+    switch (process.platform) {
+      case 'darwin': {
+        filename = 'Shelby.app/Contents/MacOS/Shelby';
+        break;
+      }
+      case 'win32':
+      default: {
+        filename = 'Shelby.exe';
+        break;
+      }
+    }
+    const executableLocation = path.join(
+      installationDirectory,
+      version,
+      filename
+    );
+    event.sender.send(
+      'download-game.log',
+      `Launching from ${executableLocation}`
+    );
+    child_process.execFile(executableLocation);
+  });
+
   ipcMain.on('download-game', async (event, version) => {
     event.sender.send(
       'download-game.log',
@@ -62,6 +107,7 @@ function createWindow() {
     const filename = `${version}.zip`;
     const uri = [
       'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
+      process.platform,
       filename,
     ].join('/');
     event.sender.send('download-game.log', `Downloading from ${uri}`);
@@ -142,13 +188,28 @@ function createWindow() {
       );
     });
 
-    const extractPath = path.join(gameDirectory, version);
+    const extractPath = path.join(installationDirectory, version);
     unzipper.extract({
       path: extractPath,
       filter: function(file) {
         return file.type !== 'SymbolicLink';
       },
     });
+  });
+}
+
+// Reads the installation directory and fetches all the game folders as string[]
+async function getInstalledVersions() {
+  const dirs = await new Promise<string[]>((resolve, reject) => {
+    fs.readdir(installationDirectory, (err, data) =>
+      err ? resolve([] as string[]) : resolve(data)
+    );
+  });
+  console.log('Found', dirs.length);
+  // Filter out non versions (e.g. DS_STORE)
+  return dirs.filter(item => {
+    console.log('Testing', item, /.*\..*\..*/.test(item));
+    return /.*\..*\..*/.test(item);
   });
 }
 

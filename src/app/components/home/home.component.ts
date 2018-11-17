@@ -57,7 +57,6 @@ export class HomeComponent implements OnInit {
   status$: Observable<string>;
   updateRequired$: Observable<boolean>;
   latestGameVersion$: Observable<string>;
-  installedGameVersion$: Observable<string>;
   // Download
   progress$: Observable<number>;
   progressPercent$: Observable<string>;
@@ -81,5 +80,7 @@ export class HomeComponent implements OnInit {
     this.updateService.update();
   }
 
-  play() {}
+  play() {
+    this.updateService.launchGame();
+  }
 }
