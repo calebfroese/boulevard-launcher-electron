@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ElectronService } from './providers/electron.service';
 import { AppConfig } from '../environments/environment';
 import { UpdateService } from './providers/update.service';
@@ -10,6 +10,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  // Prevent links opening Electron, instead request open in external browser
+  @HostListener('document:click', ['$event', '$event.target'])
+  onclick(e, target) {
+    if (target.tagName === 'A') {
+      const href = target.getAttribute('href');
+      e.preventDefault();
+      require('electron').shell.openExternal(href);
+    }
+  }
+
   constructor(
     public electronService: ElectronService,
     public updateService: UpdateService,
