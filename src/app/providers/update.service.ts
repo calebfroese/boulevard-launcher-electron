@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { AppConfig } from '../../environments/environment';
@@ -20,6 +20,7 @@ enum Status {
 @Injectable()
 export class UpdateService {
   status$ = new BehaviorSubject<Status>(Status.LOADING);
+  log$ = new BehaviorSubject<string>('');
   progress$ = new BehaviorSubject<number>(null);
   data: UpdateFile;
 
@@ -27,7 +28,13 @@ export class UpdateService {
     public electronService: ElectronService,
     public http: HttpClient,
     public zone: NgZone
-  ) {}
+  ) {
+    this.appendLog('Update service initialized');
+  }
+
+  getLog() {
+    return this.log$;
+  }
 
   getProgress() {
     return this.progress$;
@@ -110,5 +117,17 @@ export class UpdateService {
           this.status$.next(Status.DOWNLOAD_ERROR);
         })
     );
+    this.electronService.ipcRenderer.on(
+      'download-game.log',
+      (event, log: string) =>
+        this.zone.run(() => {
+          this.appendLog(log);
+        })
+    );
+  }
+
+  private appendLog(log: string) {
+    const text = `[${new Date().toISOString()}]\n${log}`;
+    this.log$.next(this.log$.getValue() + `\n` + text);
   }
 }

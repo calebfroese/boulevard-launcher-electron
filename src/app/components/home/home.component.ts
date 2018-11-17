@@ -53,6 +53,7 @@ import { UpdateService } from '../../providers/update.service';
 })
 export class HomeComponent implements OnInit {
   releaseNotes$: Observable<string>;
+  log$: Observable<string>;
   status$: Observable<string>;
   updateRequired$: Observable<boolean>;
   latestGameVersion$: Observable<string>;
@@ -68,6 +69,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.releaseNotes$ = this.updateService.getReleaseNotes();
     this.status$ = this.updateService.getStatus();
+    this.log$ = this.updateService.getLog();
     this.progress$ = this.updateService.getProgress();
     this.latestGameVersion$ = this.updateService.getLatestGameVersion();
     this.progressPercent$ = this.updateService

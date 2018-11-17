@@ -5,28 +5,38 @@
     <!-- Release notes -->
     <div *ngIf="releaseNotes$ | async as notes"
       [@fadeUp]
-      class="release-notes col-8 p-5"
+      class="release-notes col-7 p-5"
       [innerHTML]="notes"></div>
     <!-- Information -->
     <div [@fadeUp]
-      class="information col-4 p-5">
-      <h4>Information</h4>
-      <p>
-        <b>Launcher Version</b>
-        <span>{{ launcherVersion }}</span>
-      </p>
-      <p>
-        <b>Installed Game Version</b>
-        <span>{{ installedGameVersion$ | async }}</span>
-      </p>
-      <p>
-        <b>Latest Game Version</b>
-        <span>{{ latestGameVersion$ | async }}</span>
-      </p>
+      class="information col-5 p-5 d-flex flex-column">
+      <div>
+        <h4>Information</h4>
+        <p>
+          <b>Launcher Version</b>
+          <span>{{ launcherVersion }}</span>
+        </p>
+        <p>
+          <b>Installed Game Version</b>
+          <span>{{ installedGameVersion$ | async }}</span>
+        </p>
+        <p>
+          <b>Latest Game Version</b>
+          <span>{{ latestGameVersion$ | async }}</span>
+        </p>
+      </div>
+      <div class="log d-block">
+        <h5>Log</h5>
+        <div class="logger">
+          <div>
+            <pre *ngIf="log$ | async as log">{{ log }}</pre>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="update-and-play my-5 p-2 d-flex align-items-center flex-row">
+  <div class="update-and-play h-8 my-5 p-2 d-flex align-items-center flex-row">
     <!-- Progress bar -->
     <div class="flex-grow-1 p-4">
       <div class="progress">

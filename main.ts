@@ -55,17 +55,27 @@ function createWindow() {
   });
 
   ipcMain.on('download-game', async (event, version) => {
+    event.sender.send(
+      'download-game.log',
+      `Requesting download of version ${version}`
+    );
     const filename = `${version}.zip`;
     const uri = [
       'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
       filename,
     ].join('/');
+    event.sender.send('download-game.log', `Downloading from ${uri}`);
 
     // Clean temp directory, download from fresh
     await new Promise((resolve, reject) => {
       rimraf(tempDirectory, (err, data) => {
         if (err) {
           event.sender.send('download-game.download-error', err);
+          event.sender.send(
+            'download-game.log',
+            'Failed to clean artifact directory'
+          );
+          event.sender.send('download-game.log', err);
           return reject(err);
         }
         return resolve(data);
@@ -76,18 +86,30 @@ function createWindow() {
     try {
       await download(win, uri, {
         directory: tempDirectory,
-        onStarted: data => event.sender.send('download-game.started', data),
-        onProgress: data => event.sender.send('download-game.progress', data),
-        onCancel: data =>
-          event.sender.send('download-game.download-error', data),
+        onStarted: data => {
+          event.sender.send('download-game.started', data);
+          event.sender.send('download-game.log', 'Download started');
+        },
+        onProgress: data => {
+          event.sender.send('download-game.progress', data);
+          event.sender.send('download-game.log', `${data * 100}%`);
+        },
+        onCancel: data => {
+          event.sender.send('download-game.download-error', data);
+          event.sender.send('download-game.log', 'Download cancelled');
+          event.sender.send('download-game.log', data);
+        },
       });
     } catch (error) {
       event.sender.send('download-game.download-error', error);
+      event.sender.send('download-game.log', error);
       return;
     }
+    event.sender.send('download-game.progress', 1);
 
     // Unzip
     event.sender.send('download-game.extracting');
+    event.sender.send('download-game.log', 'Beginning extraction');
     const tempFilePath = path.join(tempDirectory, filename);
     const unzipper = new DecompressZip(tempFilePath);
     unzipper.on('error', err => {
@@ -96,13 +118,28 @@ function createWindow() {
 
     unzipper.on('extract', log => {
       event.sender.send('download-game.complete');
-      console.log(log);
+      event.sender.send(
+        'download-game.log',
+        log.reduce((text, logObj) => {
+          if (logObj.folder) return (text += '\nFolder ' + logObj.folder);
+          if (logObj.deflated) return (text += '\nDeflated ' + logObj.deflated);
+          return text;
+        }, '')
+      );
+      event.sender.send('download-game.log', 'Files extracted successfully');
+      event.sender.send('download-game.progress', 1);
       // Clean temp directory
-      rimraf(tempDirectory, () => null);
+      rimraf(tempDirectory, () => {
+        event.sender.send('download-game.log', 'Cleaned up download artifacts');
+      });
     });
 
     unzipper.on('progress', (fileIndex, fileCount) => {
       event.sender.send('download-game.progress', fileIndex / fileCount);
+      event.sender.send(
+        'download-game.log',
+        `Extraction ${fileIndex + 1} / ${fileCount}`
+      );
     });
 
     const extractPath = path.join(gameDirectory, version);

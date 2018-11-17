@@ -9,21 +9,35 @@
 
   .release-notes {
     overflow: auto;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-      background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #000000;
-    }
   }
 
   .information {
     p {
       display: flex;
       justify-content: space-between;
+    }
+
+    .log {
+      height: 100%;
+
+      .logger {
+        position: relative;
+        height: 100%;
+
+        div {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+
+          overflow-y: scroll;
+
+          pre {
+            white-space: pre-wrap;
+          }
+        }
+      }
     }
   }
 
