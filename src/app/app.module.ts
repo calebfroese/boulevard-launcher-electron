@@ -13,6 +13,7 @@ import { WebviewDirective } from './directives/webview.directive';
 import { ElectronService } from './providers/electron.service';
 import { UpdateService } from './providers/update.service';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     UpdateLauncherComponent,
     WebviewDirective,
     ToolbarComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

@@ -22,6 +22,7 @@ export class UpdateService {
   log$ = new BehaviorSubject<string>('');
   progress$ = new BehaviorSubject<number>(null);
   data: UpdateFile;
+  installedVersions: string[];
 
   constructor(
     public electronService: ElectronService,
@@ -92,12 +93,14 @@ export class UpdateService {
   }
 
   getInstalledVersions(): Observable<string[]> {
+    if (this.installedVersions) return of(this.installedVersions);
     return Observable.create(obs => {
       this.electronService.ipcRenderer.send('installed-versions');
       this.electronService.ipcRenderer.on(
         'installed-versions.get',
         (event, versions) =>
           this.zone.run(() => {
+            this.installedVersions = versions;
             obs.next(versions);
             obs.complete();
           })
