@@ -10,6 +10,11 @@ let win: BrowserWindow, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
+// Temporary location where game artifacts are downloaded to
+const tempDirectory = path.join(app.getPath('temp'), 'Boulevard', 'artifacts');
+// Where the extracted game is stored
+const gameDirectory = path.join(app.getPath('appData'), 'Boulevard');
+
 function createWindow() {
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -55,44 +60,52 @@ function createWindow() {
       'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
       filename,
     ].join('/');
-    const tempDirectory = path.join(
-      app.getPath('temp'),
-      'Boulevard',
-      'artifacts'
-    );
 
-    console.log('Saving to', tempDirectory);
-    const downloadItem = await download(win, uri, {
-      directory: tempDirectory,
-      onStarted: data => event.sender.send('download-game.started', data),
-      onProgress: data => event.sender.send('download-game.progress', data),
+    // Clean temp directory, download from fresh
+    await new Promise((resolve, reject) => {
+      rimraf(tempDirectory, (err, data) => {
+        if (err) {
+          event.sender.send('download-game.download-error', err);
+          return reject(err);
+        }
+        return resolve(data);
+      });
     });
-    event.sender.send('download-game.extracting');
+
+    // Download the latest game zip
+    try {
+      await download(win, uri, {
+        directory: tempDirectory,
+        onStarted: data => event.sender.send('download-game.started', data),
+        onProgress: data => event.sender.send('download-game.progress', data),
+        onCancel: data =>
+          event.sender.send('download-game.download-error', data),
+      });
+    } catch (error) {
+      event.sender.send('download-game.download-error', error);
+      return;
+    }
 
     // Unzip
+    event.sender.send('download-game.extracting');
     const tempFilePath = path.join(tempDirectory, filename);
     const unzipper = new DecompressZip(tempFilePath);
-    unzipper.on('error', function(err) {
-      console.log('Caught an error');
-      console.log(err);
+    unzipper.on('error', err => {
+      event.sender.send('download-game.extract-error', err);
     });
 
-    unzipper.on('extract', function(log) {
-      console.log('Finished extracting');
-      console.log(log);
-      event.sender.send('download-game.progress', 1);
+    unzipper.on('extract', log => {
       event.sender.send('download-game.complete');
-
-      // Cleanup temp
+      console.log(log);
+      // Clean temp directory
       rimraf(tempDirectory, () => null);
     });
 
-    unzipper.on('progress', function(fileIndex, fileCount) {
+    unzipper.on('progress', (fileIndex, fileCount) => {
       event.sender.send('download-game.progress', fileIndex / fileCount);
     });
 
-    const extractPath = path.join(app.getPath('appData'), 'Boulevard', version);
-    console.log(extractPath);
+    const extractPath = path.join(gameDirectory, version);
     unzipper.extract({
       path: extractPath,
       filter: function(file) {

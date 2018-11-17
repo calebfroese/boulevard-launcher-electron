@@ -57,6 +57,16 @@
             disabled
             class="py-3 px-5 btn btn-link">Extracting... {{ progressPercent$ | async }}</button>
         </div>
+        <div *ngSwitchCase="'EXTRACT_ERROR'">
+          <button [@popIn]
+            disabled
+            class="py-3 px-5 btn btn-link">Failed to extract</button>
+        </div>
+        <div *ngSwitchCase="'DOWNLOAD_ERROR'">
+          <button [@popIn]
+            disabled
+            class="py-3 px-5 btn btn-link">Failed to download</button>
+        </div>
         <div *ngSwitchCase="'PLAYABLE'">
           <button [@popIn]
             (click)="play()"

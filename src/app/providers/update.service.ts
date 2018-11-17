@@ -13,6 +13,8 @@ enum Status {
   DOWNLOAD_IN_PROGRESS = 'DOWNLOAD_IN_PROGRESS',
   EXTRACT_IN_PROGRESS = 'EXTRACT_IN_PROGRESS',
   PLAYABLE = 'PLAYABLE',
+  EXTRACT_ERROR = 'EXTRACT_ERROR',
+  DOWNLOAD_ERROR = 'DOWNLOAD_ERROR',
 }
 
 @Injectable()
@@ -93,6 +95,20 @@ export class UpdateService {
       this.zone.run(() => {
         this.status$.next(Status.PLAYABLE);
       })
+    );
+    this.electronService.ipcRenderer.on(
+      'download-game.extract-error',
+      (event, error) =>
+        this.zone.run(() => {
+          this.status$.next(Status.EXTRACT_ERROR);
+        })
+    );
+    this.electronService.ipcRenderer.on(
+      'download-game.download-error',
+      (event, error) =>
+        this.zone.run(() => {
+          this.status$.next(Status.DOWNLOAD_ERROR);
+        })
     );
   }
 }
