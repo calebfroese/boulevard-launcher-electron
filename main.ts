@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as rimraf from 'rimraf';
 import * as DecompressZip from 'decompress-zip';
 
 const { download } = require('electron-dl');
@@ -49,25 +50,28 @@ function createWindow() {
   });
 
   ipcMain.on('download-game', async (event, version) => {
-    console.log(version);
     const filename = `${version}.zip`;
     const uri = [
       'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
       filename,
     ].join('/');
-    console.log('Downloading', uri);
-    const directory = path.join(app.getPath('temp'), 'Boulevard');
-    console.log('Saving to', directory);
+    const tempDirectory = path.join(
+      app.getPath('temp'),
+      'Boulevard',
+      'artifacts'
+    );
+
+    console.log('Saving to', tempDirectory);
     const downloadItem = await download(win, uri, {
-      directory: directory,
+      directory: tempDirectory,
       onStarted: data => event.sender.send('download-game.started', data),
       onProgress: data => event.sender.send('download-game.progress', data),
     });
     event.sender.send('download-game.extracting');
 
     // Unzip
-    const localFilePath = path.join(directory, filename);
-    const unzipper = new DecompressZip(localFilePath);
+    const tempFilePath = path.join(tempDirectory, filename);
+    const unzipper = new DecompressZip(tempFilePath);
     unzipper.on('error', function(err) {
       console.log('Caught an error');
       console.log(err);
@@ -78,6 +82,9 @@ function createWindow() {
       console.log(log);
       event.sender.send('download-game.progress', 1);
       event.sender.send('download-game.complete');
+
+      // Cleanup temp
+      rimraf(tempDirectory, () => null);
     });
 
     unzipper.on('progress', function(fileIndex, fileCount) {
