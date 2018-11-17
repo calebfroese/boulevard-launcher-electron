@@ -1,8 +1,10 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
-let win, serve;
+const { download } = require('electron-dl');
+
+let win: BrowserWindow, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
@@ -17,7 +19,7 @@ function createWindow() {
     width: 1200,
     height: 800,
     frame: false,
-    resizable: false
+    resizable: false,
   });
 
   if (serve) {
@@ -43,6 +45,22 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
+  });
+
+  ipcMain.on('download-game', async (event, version) => {
+    console.log(version);
+    const uri = [
+      'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
+      `${version}.zip`,
+    ].join('/');
+    console.log('Downloading', uri);
+    const downloadItem = await download(win, uri, {
+      directory: app.getPath('temp') + '/spaghetti.zip',
+      onStarted: data => event.sender.send('download-game.started', data),
+      onProgress: data => event.sender.send('download-game.progress', data),
+    });
+    event.sender.send('download-game.complete');
+    console.log('downloadItem', downloadItem);
   });
 }
 

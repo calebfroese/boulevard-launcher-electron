@@ -9,11 +9,15 @@
     <div class="information col-4 p-5">
       <h4>Information</h4>
       <p>
-        <b>Launcher</b>
+        <b>Launcher Version</b>
         <span>{{ launcherVersion }}</span>
       </p>
       <p>
-        <b>Latest Game</b>
+        <b>Installed Game Version</b>
+        <span>{{ installedGameVersion$ | async }}</span>
+      </p>
+      <p>
+        <b>Latest Game Version</b>
         <span>{{ latestGameVersion$ | async }}</span>
       </p>
     </div>
@@ -25,9 +29,31 @@
       <div class="progress">
         <div class="progress-bar-striped bg-success"
           role="progressbar"
-          style="width: 25%"></div>
+          [ngStyle]="{'width': progressPercent$ | async}"></div>
       </div>
     </div>
-    <button class="py-3 px-5 btn btn-link">PLAY</button>
+    <div [ngSwitch]="status$ | async">
+      <div *ngSwitchCase="'UPDATE_REQUIRED'">
+        <button (click)="update()"
+          class="py-3 px-5 btn btn-link">UPDATE ({{ latestGameVersion$ | async }})</button>
+      </div>
+      <div *ngSwitchCase="'UPDATE_REQUESTED'">
+        <button disabled
+          class="py-3 px-5 btn btn-link">Starting download...</button>
+      </div>
+      <div *ngSwitchCase="'UPDATE_IN_PROGRESS'">
+        <button disabled
+          class="py-3 px-5 btn btn-link">{{ progressPercent$ | async }}</button>
+      </div>
+      <div *ngSwitchCase="'PLAYABLE'">
+        <button (click)="play()"
+          class="py-3 px-5 btn btn-link">PLAY</button>
+      </div>
+      <div *ngSwitchDefault>
+        <button disabled
+          class="py-3 px-5 btn btn-link">Loading...</button>
+      </div>
+    </div>
+
   </div>
 </div>
