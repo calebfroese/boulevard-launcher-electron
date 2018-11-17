@@ -1,6 +1,6 @@
 {
   "name": "boulevard-launcher-electron",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Boulevard Launcher",
   "main": "main.js",
   "private": true,
