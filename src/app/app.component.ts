@@ -20,11 +20,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  constructor(
-    public electronService: ElectronService,
-    public updateService: UpdateService,
-    public router: Router
-  ) {
+  constructor(public electronService: ElectronService, public router: Router) {
     console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {
@@ -36,12 +32,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.updateService.getLauncherUpdateRequired().subscribe(updateRequired => {
-      console.log('Update required?', updateRequired);
-      if (updateRequired) this.router.navigate(['/', 'update-launcher']);
-    });
-  }
+  ngOnInit() {}
 
   minimize() {
     this.electronService.remote.BrowserWindow.getFocusedWindow().minimize();

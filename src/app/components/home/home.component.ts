@@ -7,9 +7,11 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { AppConfig } from '../../../environments/environment';
 import { UpdateService } from '../../providers/update.service';
 
@@ -63,7 +65,7 @@ export class HomeComponent implements OnInit {
 
   launcherVersion = AppConfig.launcherVersion;
 
-  constructor(public updateService: UpdateService, public zone: NgZone) {}
+  constructor(public updateService: UpdateService, public router: Router) {}
 
   ngOnInit() {
     this.releaseNotes$ = this.updateService.getReleaseNotes();
@@ -74,6 +76,10 @@ export class HomeComponent implements OnInit {
     this.progressPercent$ = this.updateService
       .getProgress()
       .pipe(map(progress => Math.floor(progress) + '%'));
+    this.updateService.getLauncherUpdateRequired().subscribe(updateRequired => {
+      console.log('Update required?', updateRequired);
+      if (updateRequired) this.router.navigate(['/', 'update-launcher']);
+    });
   }
 
   update() {

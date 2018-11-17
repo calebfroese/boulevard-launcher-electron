@@ -7,6 +7,11 @@ import { UpdateLauncherComponent } from './components/update-launcher/update-lau
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
+  {
+    path: 'home',
     component: HomeComponent,
   },
   {

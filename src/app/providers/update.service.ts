@@ -59,7 +59,7 @@ export class UpdateService {
 
   getLauncherUpdateRequired() {
     return this.getUpdateData().pipe(
-      map(data => data.launcher.latestVersion > AppConfig.launcherVersion)
+      map(data => data.launcher.manupVersion > AppConfig.launcherVersion)
     );
   }
 
