@@ -32,28 +32,29 @@
           [ngStyle]="{'width': progressPercent$ | async}"></div>
       </div>
     </div>
-    <div [ngSwitch]="status$ | async">
-      <div *ngSwitchCase="'UPDATE_REQUIRED'">
-        <button (click)="update()"
-          class="py-3 px-5 btn btn-link">UPDATE ({{ latestGameVersion$ | async }})</button>
-      </div>
-      <div *ngSwitchCase="'UPDATE_REQUESTED'">
-        <button disabled
-          class="py-3 px-5 btn btn-link">Starting download...</button>
-      </div>
-      <div *ngSwitchCase="'UPDATE_IN_PROGRESS'">
-        <button disabled
-          class="py-3 px-5 btn btn-link">{{ progressPercent$ | async }}</button>
-      </div>
-      <div *ngSwitchCase="'PLAYABLE'">
-        <button (click)="play()"
-          class="py-3 px-5 btn btn-link">PLAY</button>
-      </div>
-      <div *ngSwitchDefault>
-        <button disabled
-          class="py-3 px-5 btn btn-link">Loading...</button>
-      </div>
+    <div class="update-button mx-auto text-center">
+      <ng-container [ngSwitch]="status$ | async">
+        <div *ngSwitchCase="'UPDATE_REQUIRED'">
+          <button (click)="update()"
+            class="py-3 px-5 btn btn-link">UPDATE</button>
+        </div>
+        <div *ngSwitchCase="'UPDATE_REQUESTED'">
+          <button disabled
+            class="py-3 px-5 btn btn-link">Starting download...</button>
+        </div>
+        <div *ngSwitchCase="'UPDATE_IN_PROGRESS'">
+          <button disabled
+            class="py-3 px-5 btn btn-link">{{ progressPercent$ | async }}</button>
+        </div>
+        <div *ngSwitchCase="'PLAYABLE'">
+          <button (click)="play()"
+            class="py-3 px-5 btn btn-link">PLAY</button>
+        </div>
+        <div *ngSwitchDefault>
+          <button disabled
+            class="py-3 px-5 btn btn-link">Loading...</button>
+        </div>
+      </ng-container>
     </div>
-
   </div>
 </div>
