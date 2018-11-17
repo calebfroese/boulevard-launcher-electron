@@ -68,7 +68,7 @@ export class UpdateService {
     return this.getUpdateData().pipe(map(data => data.game.latestVersion));
   }
 
-  private getUpdateData() {
+  getUpdateData() {
     if (this.data) return of(this.data);
     const cachebuster = '?request' + Date.now();
     return this.http.get(AppConfig.updateFileUrl + cachebuster).pipe(
