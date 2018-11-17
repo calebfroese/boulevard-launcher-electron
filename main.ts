@@ -75,12 +75,12 @@ function createWindow() {
     let filename = '';
     switch (process.platform) {
       case 'darwin': {
-        filename = 'Shelby.app/Contents/MacOS/Shelby';
+        filename = 'Boulevard.app/Contents/MacOS/Boulevard';
         break;
       }
       case 'win32':
       default: {
-        filename = 'Shelby.exe';
+        filename = 'Boulevard.exe';
         break;
       }
     }
