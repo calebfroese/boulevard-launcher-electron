@@ -1,11 +1,10 @@
-import '../polyfills';
-import 'reflect-metadata';
-
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import 'reflect-metadata';
+import '../polyfills';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -23,7 +22,13 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     WebviewDirective,
     ToolbarComponent,
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+  ],
   providers: [ElectronService, UpdateService],
   bootstrap: [AppComponent],
 })

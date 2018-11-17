@@ -3,10 +3,12 @@
 
   <div class="flex-grow-1 row row-column">
     <!-- Release notes -->
-    <div class="release-notes col-8 p-5"
-      [innerHTML]="releaseNotes$ | async"></div>
+    <div *ngIf="releaseNotes$ | async as notes"
+      [@fadeUp]
+      class="release-notes col-8 p-5"
+      [innerHTML]="notes"></div>
     <!-- Information -->
-    <div class="information col-4 p-5">
+    <div [@fadeUp] class="information col-4 p-5">
       <h4>Information</h4>
       <p>
         <b>Launcher Version</b>
@@ -35,23 +37,28 @@
     <div class="update-button mx-auto text-center">
       <ng-container [ngSwitch]="status$ | async">
         <div *ngSwitchCase="'UPDATE_REQUIRED'">
-          <button (click)="update()"
+          <button [@popIn]
+            (click)="update()"
             class="py-3 px-5 btn btn-link">UPDATE</button>
         </div>
         <div *ngSwitchCase="'UPDATE_REQUESTED'">
-          <button disabled
+          <button [@popIn]
+            disabled
             class="py-3 px-5 btn btn-link">Starting download...</button>
         </div>
         <div *ngSwitchCase="'UPDATE_IN_PROGRESS'">
-          <button disabled
+          <button [@popIn]
+            disabled
             class="py-3 px-5 btn btn-link">{{ progressPercent$ | async }}</button>
         </div>
         <div *ngSwitchCase="'PLAYABLE'">
-          <button (click)="play()"
+          <button [@popIn]
+            (click)="play()"
             class="py-3 px-5 btn btn-link">PLAY</button>
         </div>
         <div *ngSwitchDefault>
-          <button disabled
+          <button [@popIn]
+            disabled
             class="py-3 px-5 btn btn-link">Loading...</button>
         </div>
       </ng-container>
