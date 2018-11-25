@@ -14,6 +14,18 @@ With this sample, you can :
 - Run your app in a production environment
 - Package your app into an executable file for Linux, Windows & Mac
 
+## Game Deploying
+
+Games are zipped up and deployed using the following commands:
+
+```bash
+$ aws s3 cp 0.0.0.zip s3://boulevard-versioning-bucket/releases/win32/0.0.0.zip
+```
+
+```bash
+$ aws s3 cp 0.0.0.zip s3://boulevard-versioning-bucket/releases/darwin/0.0.0.zip
+```
+
 ## Getting Started
 
 Install dependencies with npm :
