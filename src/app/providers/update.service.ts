@@ -19,6 +19,7 @@ enum Status {
 @Injectable()
 export class UpdateService {
   status$ = new BehaviorSubject<Status>(Status.LOADING);
+  info$ = new BehaviorSubject<any>({});
   log$ = new BehaviorSubject<string>('');
   progress$ = new BehaviorSubject<number>(null);
   data: UpdateFile;
@@ -49,6 +50,10 @@ export class UpdateService {
 
   getStatus() {
     return this.status$;
+  }
+
+  getInfo() {
+    return this.info$;
   }
 
   getReleaseNotes() {
@@ -124,9 +129,23 @@ export class UpdateService {
     );
     this.electronService.ipcRenderer.on(
       'download-game.progress',
-      (event, progress) =>
+      (event, { bytesPerSecond, progress, receivedBytes, totalBytes }) =>
         this.zone.run(() => {
           this.progress$.next(progress * 100);
+          const speedBps = bytesPerSecond;
+          const speedKbps = speedBps / 1024;
+          const speedMbps = speedKbps / 1024;
+          let speed = speedBps.toFixed(2) + ' b/s';
+          if (speedMbps >= 1) {
+            speed = speedMbps.toFixed(2) + ' mb/s';
+          } else if (speedKbps >= 1) {
+            speed = speedKbps.toFixed(2) + ' kb/s';
+          }
+          this.info$.next({
+            speed,
+            receivedBytes,
+            totalBytes,
+          });
         })
     );
     this.electronService.ipcRenderer.on('download-game.extracting', event =>

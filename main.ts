@@ -6,7 +6,8 @@ import * as fs from 'fs';
 import * as DecompressZip from 'decompress-zip';
 import * as child_process from 'child_process';
 
-const { download } = require('electron-dl');
+// const { download } = require('electron-dl');
+const { download } = require('./download');
 
 let win: BrowserWindow, serve;
 const args = process.argv.slice(1);
@@ -103,7 +104,7 @@ function createWindow() {
     );
     const filename = `${version}.zip`;
     const uri = [
-      'https://s3.amazonaws.com/boulevard-versioning-bucket/releases',
+      'https://s3.amazonaws.com/boulevard-artifacts/releases',
       process.platform,
       filename,
     ].join('/');
@@ -135,7 +136,7 @@ function createWindow() {
         },
         onProgress: data => {
           event.sender.send('download-game.progress', data);
-          event.sender.send('download-game.log', `${data * 100}%`);
+          event.sender.send('download-game.log', `${data.progress * 100}%`);
         },
         onCancel: data => {
           event.sender.send('download-game.download-error', data);

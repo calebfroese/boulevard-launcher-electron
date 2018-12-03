@@ -36,10 +36,15 @@
   <div class="update-and-play h-8 my-5 p-2 d-flex align-items-center flex-row">
     <!-- Progress bar -->
     <div class="flex-grow-1 p-4">
-      <div class="progress">
+      <div class="my-1">&nbsp;</div>
+      <div class="progress my-1">
         <div class="progress-bar-striped bg-success"
           role="progressbar"
           [ngStyle]="{'width': progressPercent$ | async}"></div>
+      </div>
+      <div *ngIf="info$ | async as info"
+        class="my-1">
+        <small *ngIf="info.receivedBytes">{{ info.receivedBytes / 1024 / 1024 | number:'1.2-2' }} mb / {{ info.totalBytes / 1024 / 1024 | number:'1.2-2' }} mb</small>&nbsp;
       </div>
     </div>
     <div class="update-button mx-auto text-center">
@@ -57,7 +62,9 @@
         <div *ngSwitchCase="'DOWNLOAD_IN_PROGRESS'">
           <button [@popIn]
             disabled
-            class="py-3 px-5 btn btn-link">{{ progressPercent$ | async }}</button>
+            class="py-3 px-5 btn btn-link">
+            {{ progressPercent$ | async }} @ {{ (info$ | async)?.speed }}
+          </button>
         </div>
         <div *ngSwitchCase="'EXTRACT_IN_PROGRESS'">
           <button [@popIn]

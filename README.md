@@ -19,11 +19,11 @@ With this sample, you can :
 Games are zipped up and deployed using the following commands:
 
 ```bash
-$ aws s3 cp 0.0.0.zip s3://boulevard-versioning-bucket/releases/win32/0.0.0.zip
+$ aws s3 cp 0.0.0.zip s3://boulevard-artifacts/releases/win32/0.0.0.zip
 ```
 
 ```bash
-$ aws s3 cp 0.0.0.zip s3://boulevard-versioning-bucket/releases/darwin/0.0.0.zip
+$ aws s3 cp 0.0.0.zip s3://boulevard-artifacts/releases/darwin/0.0.0.zip
 ```
 
 ## Getting Started

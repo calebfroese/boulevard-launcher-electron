@@ -57,6 +57,7 @@ export class HomeComponent implements OnInit {
   releaseNotes$: Observable<string>;
   log$: Observable<string>;
   status$: Observable<string>;
+  info$: Observable<any>;
   updateRequired$: Observable<boolean>;
   latestGameVersion$: Observable<string>;
   // Download
@@ -72,6 +73,7 @@ export class HomeComponent implements OnInit {
     this.status$ = this.updateService.getStatus();
     this.log$ = this.updateService.getLog();
     this.progress$ = this.updateService.getProgress();
+    this.info$ = this.updateService.getInfo();
     this.latestGameVersion$ = this.updateService.getLatestGameVersion();
     this.progressPercent$ = this.updateService
       .getProgress()
