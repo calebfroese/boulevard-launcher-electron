@@ -10,5 +10,5 @@ export const AppConfig = {
     'https://s3.amazonaws.com/boulevard-artifacts/latest.json',
   releaseNotesUrl:
     'https://s3.amazonaws.com/boulevard-artifacts/release-notes.html',
-  launcherVersion: '0.0.3',
+  launcherVersion: '0.1.0',
 };
