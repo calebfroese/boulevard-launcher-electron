@@ -104,7 +104,7 @@ function createWindow() {
     );
     const filename = `${version}.zip`;
     const uri = [
-      'https://s3.amazonaws.com/boulevard-artifacts/releases',
+      'https://boulevard-artifacts.s3.amazonaws.com/releases',
       process.platform,
       filename,
     ].join('/');
