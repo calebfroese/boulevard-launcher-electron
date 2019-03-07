@@ -1,30 +1,61 @@
-# Boulevard Launcher
+# Boulevard Launcher Prototype
 
 This repository contains the Boulevard game launcher made in Electron.
+The Boulevard Launcher prototype is a proof of concept that an Electron + Angular app could be used for
+delivering the game to players should the decision be to not go with an existing subsystem such as Steam or the Epic Games Store.
+
+This application is not intended for production.
+It serves the purpose of demonstrating that:
+- Electron can intelligently manage local files
+- A good user experience can be delivered with Angular
+- The launcher can be highly customized (toolbar, appearance, functionality)
+
+
+![Boulevard Launcher Updating](https://user-images.githubusercontent.com/19592095/53953949-ae469480-4124-11e9-9eff-cbd501051b29.png)
 
 Currently runs with:
 
 - Angular v7.0.3
-- Electron v3.0.2
+- Electron v4.0.7
 - Electron Builder v20.28.1
+- Node 10
 
-With this sample, you can :
+With this, you can:
 
-- Run your app in a local development environment with Electron & Hot reload
-- Run your app in a production environment
-- Package your app into an executable file for Linux, Windows & Mac
+- Run the launcher in a local development environment with Electron & Hot reload
+- Run the launcher in a production environment
+- Package the launcher into an executable file for Linux, Windows & Mac
 
-## Game Deploying
+## Game Files
 
-Games are zipped up and deployed using the following commands:
+The game prototype artifacts are zipped and deployed to AWS S3.
+This launcher will fetch an update file at each load to determine whether to force a mandatory update or the launcher, update the game, or enable play.
 
-```bash
-$ aws s3 cp 0.0.0.zip s3://boulevard-artifacts/releases/win32/0.0.0.zip
+```json
+{
+    "game": {
+        "latestVersion": "0.0.0"
+    },
+    "launcher": {
+        "latestVersion": "0.0.0",
+        // Brick the launcher and force a download
+        "manupVersion": "0.0.0"
+    }
+}
 ```
 
-```bash
-$ aws s3 cp 0.0.0.zip s3://boulevard-artifacts/releases/darwin/0.0.0.zip
-```
+### Local Storage
+
+The game will be updated and versions saved to the default Electron appdata location for the operating system.
+
+`{APPDATA}/Boulevard/versions`
+
+See [Electrons documentation for platform specific paths](https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname).
+
+### Mandatory Updating
+
+A core requirement of the Boulevard launcher is the ability to connect to the versioning authority and enforce versioning rules on both the client and the game.
+In the future, the launcher can self-update in the same manner as the game.
 
 ## Getting Started
 
@@ -57,6 +88,7 @@ You can disable "Developer Tools" by commenting `win.webContents.openDevTools();
 
 | Command                    | Description                                                                                                 |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npm start`                | Build the app. Serve with hot reload inside an Electron app                                                 |
 | `npm run ng:serve:web`     | Execute the app in the browser                                                                              |
 | `npm run build`            | Build the app. Your built files are in the /dist folder.                                                    |
 | `npm run build:prod`       | Build the app with Angular aot. Your built files are in the /dist folder.                                   |
@@ -65,13 +97,10 @@ You can disable "Developer Tools" by commenting `win.webContents.openDevTools();
 | `npm run electron:windows` | On a Windows OS, builds your application and creates an app consumable in windows 32/64 bit systems         |
 | `npm run electron:mac`     | On a MAC OS, builds your application and generates a `.app` file of your application that can be run on Mac |
 
-**Your application is optimised. Only /dist folder and node dependencies are included in the executable.**
+**This application is optimised. Only /dist folder and node dependencies are included in the executable.**
 
-## You want to use a specific lib (like rxjs) in electron main thread ?
+## Gallery
 
-You can do this! Just by importing your library in npm dependencies (not devDependencies) with `npm install --save`. It will be loaded by electron during build phase and added to the final package. Then use your library by importing it in `main.ts` file. Easy no ?
+![screen shot 2019-03-07 at 9 59 42 pm](https://user-images.githubusercontent.com/19592095/53953949-ae469480-4124-11e9-9eff-cbd501051b29.png)
 
-## Browser mode
-
-Maybe you want to execute the application in the browser with hot reload ? You can do it with `npm run ng:serve:web`.  
-Note that you can't use Electron or NodeJS native libraries in this case. Please check `providers/electron.service.ts` to watch how conditional import of electron/Native libraries is done.
+![screen shot 2019-03-07 at 9 58 20 pm](https://user-images.githubusercontent.com/19592095/53953955-b1da1b80-4124-11e9-9d0f-2dd247543b11.png)
